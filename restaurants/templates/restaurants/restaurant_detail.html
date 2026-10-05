@@ -1,0 +1,355 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ restaurant.name }} | DineEase</title>
+
+    <!-- Restaurant Detail CSS -->
+    <link rel="stylesheet" href="{% static 'css/restaurant_detail.css' %}">
+</head>
+
+<body>
+
+<div class="restaurant-detail-page">
+
+    <!-- ================================
+         BACK BUTTON
+    ================================= -->
+
+    <div class="container back-container">
+
+        <a href="{% url 'restaurants:restaurant-list' %}"
+           class="back-link">
+
+            ← Back to Restaurants
+
+        </a>
+
+    </div>
+
+
+    <!-- ================================
+         RESTAURANT HERO
+    ================================= -->
+
+    <section class="restaurant-hero">
+
+        <div class="container">
+
+            <div class="restaurant-hero-content">
+
+                <span class="restaurant-badge">
+                    RESTAURANT
+                </span>
+
+
+                <h1>
+                    {{ restaurant.name }}
+                </h1>
+
+
+                {% if restaurant.description %}
+
+                    <p class="restaurant-description">
+                        {{ restaurant.description }}
+                    </p>
+
+                {% endif %}
+
+
+                <!-- ================================
+                     CONTACT INFORMATION
+                ================================= -->
+
+                <div class="restaurant-contact-info">
+
+
+                    {% if restaurant.address %}
+
+                    <div class="contact-item">
+
+                        <div class="contact-icon">
+                            📍
+                        </div>
+
+                        <div>
+
+                            <small>
+                                Address
+                            </small>
+
+                            <p>
+                                {{ restaurant.address }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if restaurant.phone %}
+
+                    <div class="contact-item">
+
+                        <div class="contact-icon">
+                            📞
+                        </div>
+
+                        <div>
+
+                            <small>
+                                Phone
+                            </small>
+
+                            <p>
+                                {{ restaurant.phone }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if restaurant.email %}
+
+                    <div class="contact-item">
+
+                        <div class="contact-icon">
+                            ✉️
+                        </div>
+
+                        <div>
+
+                            <small>
+                                Email
+                            </small>
+
+                            <p>
+                                {{ restaurant.email }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    {% if restaurant.opening_hours %}
+
+                    <div class="contact-item">
+
+                        <div class="contact-icon">
+                            🕐
+                        </div>
+
+                        <div>
+
+                            <small>
+                                Opening Hours
+                            </small>
+
+                            <p>
+                                {{ restaurant.opening_hours }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================
+         TABLE SECTION
+    ================================= -->
+
+    <section class="tables-section">
+
+        <div class="container">
+
+
+            <!-- SECTION HEADING -->
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        AVAILABLE TABLES
+                    </span>
+
+                    <h2>
+                        Choose Your Table
+                    </h2>
+
+                    <p>
+                        Select a table that fits your group and continue
+                        to make your reservation.
+                    </p>
+
+                </div>
+
+
+                <a href="{% url 'reservations:reservation-create' %}?restaurant={{ restaurant.id }}"
+                   class="primary-btn">
+
+                    Make a Reservation
+
+                </a>
+
+            </div>
+
+
+            <!-- ================================
+                 TABLE GRID
+            ================================= -->
+
+            <div class="tables-grid">
+
+
+                {% if tables %}
+
+                    {% for table in tables %}
+
+                    <div class="table-card">
+
+
+                        <!-- TABLE CARD TOP -->
+
+                        <div class="table-card-top">
+
+                            <div class="table-icon">
+                                🪑
+                            </div>
+
+
+                            {% if table.is_available %}
+
+                                <span class="availability available">
+                                    Available
+                                </span>
+
+                            {% else %}
+
+                                <span class="availability unavailable">
+                                    Unavailable
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- TABLE NUMBER -->
+
+                        <div class="table-number">
+
+                            Table {{ table.table_number }}
+
+                        </div>
+
+
+                        <!-- CAPACITY -->
+
+                        <div class="capacity">
+
+                            👥
+
+                            <span>
+                                Capacity:
+                                <strong>
+                                    {{ table.capacity }}
+                                </strong>
+                                people
+                            </span>
+
+                        </div>
+
+
+                        <!-- BOOK BUTTON -->
+
+                        {% if table.is_available %}
+
+                            <a href="{% url 'reservations:reservation-create' %}?restaurant={{ restaurant.id }}&table={{ table.id }}"
+                               class="table-book-btn">
+
+                                Book This Table
+
+                            </a>
+
+                        {% else %}
+
+                            <span class="table-book-btn disabled">
+
+                                Not Available
+
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <!-- EMPTY TABLES -->
+
+                    <div class="empty-tables">
+
+                        <div class="empty-icon">
+                            🍽️
+                        </div>
+
+                        <h3>
+                            No Tables Available
+                        </h3>
+
+                        <p>
+                            There are currently no tables available
+                            for this restaurant.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<a href="{% url 'chatbot:chat' %}" class="chatbot-link">
+    💬
+</a>
+
+</body>
+</html>
+

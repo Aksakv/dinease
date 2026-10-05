@@ -1,0 +1,838 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Reservations | DineEase</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+
+        .navbar {
+            background-color: #333;
+            color: white;
+
+            padding: 16px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Page Header */
+
+        .page-header {
+            text-align: center;
+            padding: 40px 20px 25px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Reservations Container */
+
+        .reservation-container {
+            width: 850px;
+            max-width: 90%;
+            margin: 10px auto 50px;
+        }
+
+        /* Reservation Card */
+
+        .reservation-card {
+            background-color: white;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            border-radius: 12px;
+
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+            transition: 0.2s;
+        }
+
+        .reservation-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .reservation-card h2 {
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+
+        .reservation-info {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 12px;
+
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background-color: #f8f8f8;
+
+            padding: 12px;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+        }
+
+        .info-item strong {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 13px;
+
+            color: #666;
+        }
+
+        /* Status */
+
+        .status {
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            text-transform: capitalize;
+
+            background-color: #eee;
+
+            color: #333;
+        }
+
+        /* Cancel Button */
+
+        .cancel-button {
+            padding: 10px 18px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            background-color: #333;
+
+            color: white;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .cancel-button:hover {
+            background-color: #555;
+        }
+
+        /* Empty State */
+
+        .empty-message {
+            background-color: white;
+
+            padding: 45px 20px;
+
+            text-align: center;
+
+            border-radius: 12px;
+
+            color: #777;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-message h2 {
+            color: #333;
+
+            margin-bottom: 10px;
+        }
+
+        /* New Reservation Button */
+
+        .new-reservation {
+            display: inline-block;
+
+            margin-top: 20px;
+
+            padding: 12px 20px;
+
+            background-color: #333;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+        .new-reservation:hover {
+            background-color: #555;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 20px;
+
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .page-header h1 {
+                font-size: 26px;
+            }
+
+            .reservation-container {
+                max-width: 92%;
+            }
+
+            .reservation-info {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+            DineEase
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{% url 'restaurants:restaurant-list' %}">
+                Restaurants
+            </a>
+
+            <a href="{% url 'reservations:reservation-list' %}">
+                My Reservations
+            </a>
+
+            <a href="{% url 'reservations:notification-list' %}">
+                Notifications
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Page Header -->
+
+    <header class="page-header">
+
+        <h1>
+            My Reservations
+        </h1>
+
+        <p>
+            View and manage your restaurant reservations.
+        </p>
+
+    </header>
+
+
+    <!-- Reservations -->
+
+    <main class="reservation-container">
+
+        {% for reservation in reservations %}
+
+            <div class="reservation-card">
+
+                <h2>
+                    {{ reservation.restaurant.name }}
+                </h2>
+
+
+                <div class="reservation-info">
+
+                    <div class="info-item">
+
+                        <strong>Table</strong>
+
+                        Table {{ reservation.table.table_number }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>Date</strong>
+
+                        {{ reservation.reservation_date }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>Time</strong>
+
+                        {{ reservation.reservation_time }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>Guests</strong>
+
+                        {{ reservation.guests }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>Status</strong>
+
+                        <span class="status">
+                            {{ reservation.status }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                {% if reservation.status != "cancelled" %}
+
+                    <form
+                        method="post"
+                        action="{% url 'reservations:reservation-cancel' reservation.pk %}"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="cancel-button"
+                            onclick="return confirm(
+                                'Are you sure you want to cancel this reservation?'
+                            );"
+                        >
+                            Cancel Reservation
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+
+        {% empty %}
+
+
+            <div class="empty-message">
+
+                <h2>
+                    No Reservations Yet
+                </h2>
+
+                <p>
+                    You haven't made any restaurant reservations yet.
+                </p>
+
+                <a
+                    href="{% url 'reservations:reservation-create' %}"
+                    class="new-reservation"
+                >
+                    Make a Reservation
+                </a>
+
+            </div>
+
+
+        {% endfor %}
+
+
+        {% if reservations %}
+
+            <a
+                href="{% url 'reservations:reservation-create' %}"
+                class="new-reservation"
+            >
+                + Make Another Reservation
+            </a>
+            
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurants | DineEase</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+
+        .navbar {
+            background-color: #333;
+            color: white;
+
+            padding: 16px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Page Header */
+
+        .page-header {
+            text-align: center;
+            padding: 40px 20px 25px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #777;
+            font-size: 15px;
+        }
+
+        /* Restaurant Container */
+
+        .restaurant-container {
+            width: 1000px;
+            max-width: 90%;
+
+            margin: 10px auto 50px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(280px, 1fr));
+
+            gap: 25px;
+        }
+
+        /* Restaurant Card */
+
+        .restaurant-card {
+            background-color: white;
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+
+            transition: 0.2s;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 7px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .restaurant-card h2 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 18px;
+        }
+
+        .restaurant-info {
+            margin-bottom: 8px;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .restaurant-info strong {
+            color: #333;
+        }
+
+        .opening-hours {
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+
+        .actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        .button {
+            flex: 1;
+
+            text-align: center;
+
+            padding: 10px 12px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            text-decoration: none;
+
+            transition: 0.2s;
+        }
+
+        .details-button {
+            background-color: #eee;
+
+            color: #333;
+        }
+
+        .details-button:hover {
+            background-color: #ddd;
+        }
+
+        .book-button {
+            background-color: #333;
+
+            color: white;
+        }
+
+        .book-button:hover {
+            background-color: #555;
+        }
+
+        /* Empty State */
+
+        .empty-message {
+            grid-column: 1 / -1;
+
+            background-color: white;
+
+            padding: 40px;
+
+            text-align: center;
+
+            border-radius: 10px;
+
+            color: #777;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 20px;
+
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .page-header h1 {
+                font-size: 26px;
+            }
+
+            .restaurant-container {
+                max-width: 92%;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+            DineEase
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{% url 'restaurants:restaurant-list' %}">
+                Restaurants
+            </a>
+
+            <a href="{% url 'reservations:reservation-list' %}">
+                My Reservations
+            </a>
+
+            <a href="{% url 'reservations:notification-list' %}">
+                Notifications
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Page Header -->
+
+    <header class="page-header">
+
+        <h1>
+            Available Restaurants
+        </h1>
+
+        <p>
+            Discover restaurants and reserve your table with DineEase.
+        </p>
+
+    </header>
+
+
+    <!-- Restaurant List -->
+
+    <main class="restaurant-container">
+
+        {% for restaurant in restaurants %}
+
+            <div class="restaurant-card">
+
+                <h2>
+                    {{ restaurant.name }}
+                </h2>
+
+
+                <p class="description">
+                    {{ restaurant.description }}
+                </p>
+
+
+                <p class="restaurant-info">
+
+                    <strong>Address:</strong>
+
+                    {{ restaurant.address }}
+
+                </p>
+
+
+                <p class="restaurant-info">
+
+                    <strong>Phone:</strong>
+
+                    {{ restaurant.phone }}
+
+                </p>
+
+
+                <p class="restaurant-info opening-hours">
+
+                    <strong>Opening Hours:</strong>
+
+                    {{ restaurant.opening_time }}
+
+                    -
+
+                    {{ restaurant.closing_time }}
+
+                </p>
+
+
+                <div class="actions">
+
+                    <a
+                        href="{% url 'restaurants:restaurant-detail' restaurant.pk %}"
+                        class="button details-button"
+                    >
+                        View Details
+                    </a>
+
+
+                    <a
+                        href="{% url 'reservations:reservation-create' %}?restaurant={{ restaurant.pk }}"
+                        class="button book-button"
+                    >
+                        Book a Table
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        {% empty %}
+
+
+            <div class="empty-message">
+
+                <h2>
+                    No Restaurants Available
+                </h2>
+
+                <p>
+                    There are currently no restaurants available for reservation.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+    </main>
+<a href="{% url 'chatbot:chatbot-page' %}">
+    Chatbot
+</a>
+
+</body>
+
+</html>
+
+
+
+        {% endif %}
+
+    </main>
+
+
+</body>
+
+</html>
+

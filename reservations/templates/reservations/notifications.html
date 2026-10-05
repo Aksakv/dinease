@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | DineEase</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .header p {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        .container {
+            width: 700px;
+            max-width: 90%;
+            margin: 40px auto;
+        }
+
+        .notification-card {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 15px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .notification-message {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .notification-time {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .empty-message {
+            background-color: white;
+            padding: 30px;
+
+            text-align: center;
+
+            border-radius: 10px;
+
+            color: #777;
+
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .back-button {
+            display: inline-block;
+
+            margin-top: 20px;
+            padding: 11px 18px;
+
+            background-color: #333;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 95%;
+                margin-top: 25px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>🔔 Notifications</h1>
+        <p>Stay updated with your reservations</p>
+    </div>
+
+    <div class="container">
+
+        {% for notification in notifications %}
+
+            <div class="notification-card">
+
+                <p class="notification-message">
+                    {{ notification.message }}
+                </p>
+
+                <small class="notification-time">
+                    {{ notification.created_at }}
+                </small>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-message">
+                <p>No notifications yet.</p>
+            </div>
+
+        {% endfor %}
+
+        <a
+            href="{% url 'reservations:reservation-list' %}"
+            class="back-button"
+        >
+            ← Back to My Reservations
+        </a>
+       
+
+    </div>
+    <a href="{% url 'chatbot:chatbot-page' %}">
+    Chatbot
+</a>
+
+</body>
+
+</html>
+

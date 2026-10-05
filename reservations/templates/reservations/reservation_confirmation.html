@@ -1,0 +1,676 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | DineEase</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+
+        .navbar {
+            background-color: #333;
+            color: white;
+
+            padding: 16px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header */
+
+        .header {
+            text-align: center;
+            padding: 35px 20px 20px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Main Container */
+
+        .container {
+            width: 700px;
+            max-width: 90%;
+            margin: 20px auto 40px;
+        }
+
+        /* Notification Card */
+
+        .notification-card {
+            background-color: white;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            border-radius: 10px;
+
+            border-left: 4px solid #333;
+
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+            transition: 0.2s;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .notification-message {
+            font-size: 16px;
+
+            line-height: 1.5;
+
+            margin-bottom: 10px;
+        }
+
+        .notification-time {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Empty State */
+
+        .empty-message {
+            background-color: white;
+
+            padding: 40px 20px;
+
+            text-align: center;
+
+            border-radius: 10px;
+
+            color: #777;
+
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        /* Back Button */
+
+        .back-button {
+            display: inline-block;
+
+            margin-top: 20px;
+
+            padding: 11px 18px;
+
+            background-color: #333;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 20px;
+
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .container {
+                width: 95%;
+                margin-top: 10px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+            DineEase
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{% url 'restaurants:restaurant-list' %}">
+                Restaurants
+            </a>
+
+            <a href="{% url 'reservations:reservation-list' %}">
+                My Reservations
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Page Header -->
+
+    <div class="header">
+
+        <h1>🔔 Notifications</h1>
+
+        <p>
+            Stay updated with your reservations
+        </p>
+
+    </div>
+
+
+    <!-- Notifications -->
+
+    <div class="container">
+
+        {% for notification in notifications %}
+
+            <div class="notification-card">
+
+                <p class="notification-message">
+                    {{ notification.message }}
+                </p>
+
+                <small class="notification-time">
+                    {{ notification.created_at }}
+                </small>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-message">
+
+                <div class="empty-icon">
+                    🔔
+                </div>
+
+                <p>
+                    No notifications yet.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+
+        <a
+            href="{% url 'reservations:reservation-list' %}"
+            class="back-button"
+        >
+            ← Back to My Reservations
+        </a>
+        <a href="{% url 'logout' %}">
+    Logout
+</a>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurants | DineEase</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+
+        .navbar {
+            background-color: #333;
+            color: white;
+
+            padding: 16px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Page Header */
+
+        .page-header {
+            text-align: center;
+            padding: 40px 20px 25px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #777;
+            font-size: 15px;
+        }
+
+        /* Restaurant Container */
+
+        .restaurant-container {
+            width: 1000px;
+            max-width: 90%;
+
+            margin: 10px auto 50px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(280px, 1fr));
+
+            gap: 25px;
+        }
+
+        /* Restaurant Card */
+
+        .restaurant-card {
+            background-color: white;
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+
+            transition: 0.2s;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 7px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .restaurant-card h2 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #666;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 18px;
+        }
+
+        .restaurant-info {
+            margin-bottom: 8px;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .restaurant-info strong {
+            color: #333;
+        }
+
+        .opening-hours {
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+
+        .actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        .button {
+            flex: 1;
+
+            text-align: center;
+
+            padding: 10px 12px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            text-decoration: none;
+
+            transition: 0.2s;
+        }
+
+        .details-button {
+            background-color: #eee;
+
+            color: #333;
+        }
+
+        .details-button:hover {
+            background-color: #ddd;
+        }
+
+        .book-button {
+            background-color: #333;
+
+            color: white;
+        }
+
+        .book-button:hover {
+            background-color: #555;
+        }
+
+        /* Empty State */
+
+        .empty-message {
+            grid-column: 1 / -1;
+
+            background-color: white;
+
+            padding: 40px;
+
+            text-align: center;
+
+            border-radius: 10px;
+
+            color: #777;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 20px;
+
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .page-header h1 {
+                font-size: 26px;
+            }
+
+            .restaurant-container {
+                max-width: 92%;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- Navigation -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+            DineEase
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{% url 'restaurants:restaurant-list' %}">
+                Restaurants
+            </a>
+
+            <a href="{% url 'reservations:reservation-list' %}">
+                My Reservations
+            </a>
+
+            <a href="{% url 'reservations:notification-list' %}">
+                Notifications
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Page Header -->
+
+    <header class="page-header">
+
+        <h1>
+            Available Restaurants
+        </h1>
+
+        <p>
+            Discover restaurants and reserve your table with DineEase.
+        </p>
+
+    </header>
+
+
+    <!-- Restaurant List -->
+
+    <main class="restaurant-container">
+
+        {% for restaurant in restaurants %}
+
+            <div class="restaurant-card">
+
+                <h2>
+                    {{ restaurant.name }}
+                </h2>
+
+
+                <p class="description">
+                    {{ restaurant.description }}
+                </p>
+
+
+                <p class="restaurant-info">
+
+                    <strong>Address:</strong>
+
+                    {{ restaurant.address }}
+
+                </p>
+
+
+                <p class="restaurant-info">
+
+                    <strong>Phone:</strong>
+
+                    {{ restaurant.phone }}
+
+                </p>
+
+
+                <p class="restaurant-info opening-hours">
+
+                    <strong>Opening Hours:</strong>
+
+                    {{ restaurant.opening_time }}
+
+                    -
+
+                    {{ restaurant.closing_time }}
+
+                </p>
+
+
+                <div class="actions">
+
+                    <a
+                        href="{% url 'restaurants:restaurant-detail' restaurant.pk %}"
+                        class="button details-button"
+                    >
+                        View Details
+                    </a>
+
+
+                    <a
+                        href="{% url 'reservations:reservation-create' %}?restaurant={{ restaurant.pk }}"
+                        class="button book-button"
+                    >
+                        Book a Table
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        {% empty %}
+
+
+            <div class="empty-message">
+
+                <h2>
+                    No Restaurants Available
+                </h2>
+
+                <p>
+                    There are currently no restaurants available for reservation.
+                </p>
+
+            </div>
+
+
+        {% endfor %}
+
+    </main>
+<a href="{% url 'chatbot:chatbot-page' %}">
+    Chatbot
+</a>
+
+</body>
+
+</html>
+
+
+
+    </div>
+
+</body>
+
+</html>
+
